@@ -4,10 +4,10 @@ import requests
 import argparse
 import parser
 import resolver
+import formatting
 
 # TODO:
 # * Parse warnings, perhaps by using the -w flag.
-# * Nicer output! Colors! Box chars!
 # * Print out more than 3 connectins (perhaps use the -n flag).
 
 def build_parser() -> argparse.ArgumentParser:
@@ -199,11 +199,7 @@ def main() -> None:
         direct=args.direct,
     )
 
-    # Print out the connections in the most minimal manner.
-    for connection in connections:
-        print(connection.departure)
-        for step in connection.steps:
-            print(f"  {step}")
+    formatting.pretty_print(src, dest, connections)
 
 if __name__ == "__main__":
     main()
