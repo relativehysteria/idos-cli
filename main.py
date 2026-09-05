@@ -92,38 +92,35 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def split_datetime(value: str | None) -> tuple[str, str]:
-    """Split the time string passed in --time as a date and a time."""
-    # Check that we were given any value at all.
-    if value is None or len(value.strip()) == 0:
-        return ("", "")
+    """Split a --time value into a date and time."""
+    if not value or not (value := value.strip()):
+        return "", ""
 
-    value = value.strip()
-
-    # Full date + time: YYYY-MM-DD HH:MM or MM-DD HH:MM.
     if " " in value:
-        date_part, time_part = value.split(" ", 1)
+        date_part, time_part = value.split(maxsplit=1)
+    elif ":" in value:
+        date_part, time_part = "", value
+    else:
+        date_part, time_part = value, ""
 
+    if date_part:
         if len(date_part.split("-")) == 2:
             date_part = f"{datetime.now().year}-{date_part}"
-            date_fmt = "%Y-%m-%d"
-        else:
-            date_fmt = "%Y-%m-%d"
 
-        date = datetime.strptime(date_part, date_fmt).strftime("%Y-%m-%d")
-        time = datetime.strptime(time_part, "%H:%M").strftime("%H:%M")
-        return date, time
+        parsed_date = datetime.strptime(date_part, "%Y-%m-%d")
+        weekday = parsed_date.strftime("%a").lower()
+        date = f"{parsed_date.day}.{parsed_date.month}" \
+               f".{parsed_date.year} {weekday}"
+    else:
+        date = ""
 
-    # Time only: HH:MM.
-    if ":" in value:
-        time = datetime.strptime(value, "%H:%M").strftime("%H:%M")
-        return "", time
+    time = (
+        datetime.strptime(time_part, "%H:%M").strftime("%H:%M")
+        if time_part
+        else ""
+    )
 
-    # Date only: YYYY-MM-DD or MM-DD.
-    if len(value.split("-")) == 2:
-        value = f"{datetime.now().year}-{value}"
-
-    date = datetime.strptime(value, "%Y-%m-%d").strftime("%Y-%m-%d")
-    return date, ""
+    return date, time
 
 
 def search_connections(
@@ -139,9 +136,9 @@ def search_connections(
 
     # Parse the date
     date, time = split_datetime(time)
+    date = f"{date} fri"
 
     # Build the request and send it!
-
     data = {
         "From": src.title,
         "FromHidden": title_ident(src),
