@@ -31,8 +31,8 @@ def build_parser() -> argparse.ArgumentParser:
             "time of the journey (departure time by default, "
             "or arrival time if --arrive is set). "
             "If omitted, connections departing now are searched. "
-            "Can be the hour (\"13:42\"), the date (\"2026-09-14\"), "
-            "or both (\"2026-09-14 13:42\")."
+            "Can be the hour (\"13:42\"), the date (\"2026-09-14\", "
+            "or just \"09-14\"), or both (\"2026-09-14 13:42\")."
         ),
     )
 

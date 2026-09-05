@@ -15,6 +15,7 @@ class Ansi:
 
     BOLD = "\033[1m"
     DIM = "\033[2m"
+    ITALIC = "\033[3m"
 
     @classmethod
     def wrap(cls, text: str, *styles: str) -> str:
@@ -27,7 +28,7 @@ def pretty_print(
     cons: list[parser.Connection],
 ) -> None:
     """Print everything to the terminal in a very pretty way!"""
-    print("╌" * 46)
+    print("─" * 46)
     print()
     print(Ansi.wrap(src.title, Ansi.BOLD, Ansi.YELLOW), end=", ")
     print(Ansi.wrap(src.description, Ansi.YELLOW), end=" -> ")
@@ -51,7 +52,7 @@ def pretty_print(
             print(prefix, end="")
 
             if isinstance(step, parser.Transfer):
-                print(f"{Ansi.wrap(step.text, Ansi.YELLOW)}\n│")
+                print(f"{Ansi.wrap(step.text, Ansi.YELLOW, Ansi.ITALIC)}\n│")
                 continue
 
             disruption = f" ({Ansi.wrap('!', Ansi.RED, Ansi.BOLD)})" \
@@ -77,7 +78,7 @@ def connection_prefix(is_first: bool, is_last: bool) -> str:
 
 
 def pretty_stop(stop: parser.Stop) -> str:
-    request = Ansi.wrap("X", Ansi.CYAN)
+    request = Ansi.wrap("Z", Ansi.CYAN)
     platform = Ansi.wrap(stop.platform, Ansi.GREEN) if stop.platform else ""
 
     details = ", ".join(
