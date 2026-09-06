@@ -7,8 +7,8 @@ import resolver
 import formatting
 
 # TODO:
-# * Parse warnings, perhaps by using the -w flag.
-# * Print out more than 3 connectins (perhaps use the -n flag).
+# * Parse and print out warnings (--expand)
+# * Print out more connections (--count)
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(

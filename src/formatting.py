@@ -28,16 +28,17 @@ def pretty_print(
     cons: list[parser.Connection],
 ) -> None:
     """Print everything to the terminal in a very pretty way!"""
-    print("─" * 46)
-    print()
+    sep_len = 40
+
+    print("─" * sep_len, end="╮\n\n")
     print(Ansi.wrap(src.title, Ansi.BOLD, Ansi.YELLOW), end=", ")
-    print(Ansi.wrap(src.description, Ansi.YELLOW), end=" -> ")
+    print(Ansi.wrap(src.description, Ansi.YELLOW), end="\n ╰─> ")
     print(Ansi.wrap(dest.title, Ansi.BOLD, Ansi.YELLOW), end=", ")
     print(Ansi.wrap(dest.description, Ansi.YELLOW))
 
     for connection in cons:
         print()
-        print("╌" * 46)
+        print("─" * sep_len, end="┤\n")
 
         departure = Ansi.wrap(connection.departure, Ansi.MAGENTA)
         arrival = Ansi.wrap(connection.steps[-1].stops[-1].time, Ansi.MAGENTA)
@@ -65,6 +66,7 @@ def pretty_print(
 
             if not is_last:
                 print("│")
+    print("─" * sep_len, end="╯\n")
 
 
 def connection_prefix(is_first: bool, is_last: bool) -> str:
