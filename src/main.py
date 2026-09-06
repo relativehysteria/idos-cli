@@ -126,17 +126,13 @@ def split_datetime(value: str | None) -> tuple[str, str]:
 def search_connections(
     src: Place,
     dest: Place,
-    time: str | None = None,
+    date_time: Tuple[str, str] | None = None,
     is_arr: bool = False,
     direct: bool = False,
 ) -> List[parser.Connection]:
     """Search IDOS for connections."""
     def title_ident(place: Place) -> str:
         return f"{place.title}%{place.idents[0]}%{place.idents[1]}"
-
-    # Parse the date
-    date, time = split_datetime(time)
-    date = f"{date} fri"
 
     # Build the request and send it!
     data = {
@@ -150,8 +146,8 @@ def search_connections(
         "IsArr": str(is_arr),
         "AdvancedFormTxt": "",
         "ViaReverse": str(False),
-        "Date": date,
-        "Time": time,
+        "Date": date_time[0],
+        "Time": date_time[1],
     }
 
     url = "https://idos.cz/vlakyautobusymhdvse/spojeni/"
@@ -178,6 +174,10 @@ def main() -> None:
     if args.arrive and args.time is None:
         parser.error("--arrive was used but --time was not specififed")
 
+    # Parse the date
+    date, time = split_datetime(args.time)
+    date = f"{date} fri" if date else ""
+
     # Resolve the destinations.
     if not (src := resolver.resolve_place_arg(args.src)):
         print(f'Couldn\'t resolve "{args.src}".')
@@ -191,7 +191,7 @@ def main() -> None:
     connections = search_connections(
         src=src,
         dest=dest,
-        time=args.time,
+        date_time=(date, time),
         is_arr=args.arrive,
         direct=args.direct,
     )
