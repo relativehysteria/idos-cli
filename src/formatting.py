@@ -32,9 +32,9 @@ def pretty_print(
 
     print("─" * sep_len, end="╮\n\n")
     print(Ansi.wrap(src.title, Ansi.BOLD, Ansi.YELLOW), end=", ")
-    print(Ansi.wrap(src.description, Ansi.YELLOW), end="\n ╰─> ")
+    print(src.description, end="\n ╰─> ")
     print(Ansi.wrap(dest.title, Ansi.BOLD, Ansi.YELLOW), end=", ")
-    print(Ansi.wrap(dest.description, Ansi.YELLOW))
+    print(dest.description)
 
     for connection in cons:
         print()
@@ -62,7 +62,7 @@ def pretty_print(
 
             stop_prefix = " " if is_last else "│"
             print(f"{stop_prefix}   ├ {pretty_stop(step.stops[0])}")
-            print(f"{stop_prefix}   └ {pretty_stop(step.stops[-1])}")
+            print(f"{stop_prefix}   ╰ {pretty_stop(step.stops[-1])}")
 
             if not is_last:
                 print("│")
@@ -73,9 +73,9 @@ def connection_prefix(is_first: bool, is_last: bool) -> str:
     if is_first and is_last:
         return ""
     if is_first:
-        return "┌ "
+        return "╭ "
     if is_last:
-        return "└ "
+        return "╰ "
     return "├ "
 
 
